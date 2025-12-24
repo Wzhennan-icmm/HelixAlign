@@ -1,0 +1,12 @@
+[package]
+name = "helixalign"
+version = "0.1.0"
+edition = "2024"
+description = "Rust implementation of HelixAlign - a versatile alignment tool for DNA and protein sequences"
+authors = ["AI Assistant"]
+license = "MIT"
+
+[dependencies]
+clap = { version = "4.0", features = ["derive"] }
+rayon = "1.7"
+indicatif = { version = "0.17", features = ["rayon"] }

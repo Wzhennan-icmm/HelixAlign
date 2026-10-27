@@ -2,7 +2,8 @@
 name = "helixalign"
 version = "0.1.0"
 edition = "2024"
-description = "Rust implementation of HelixAlign - a versatile alignment tool for DNA and protein sequences"
+rust-version = "1.85"
+description = "Record-aware DNA maximal exact matching with MUM, MAM and MEM modes"
 authors = ["AI Assistant"]
 license = "MIT"
 

@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 #[derive(Debug, Clone)]
 pub struct GenomicStats {
     pub num_sequences: usize,
@@ -31,19 +29,20 @@ impl GenomicStats {
         let total_length: usize = lengths.iter().sum();
         let num_sequences = sequences.len();
         let mean_length = total_length as f64 / num_sequences as f64;
-        
+
         let min_length = *lengths.iter().min().unwrap_or(&0);
         let max_length = *lengths.iter().max().unwrap_or(&0);
 
         // Calculate N50 and N90
         let mut sorted_lengths = lengths.clone();
         sorted_lengths.sort_by(|a, b| b.cmp(a)); // Sort in descending order
-        
+
         let n50 = Self::calculate_nx(&sorted_lengths, 50.0);
         let n90 = Self::calculate_nx(&sorted_lengths, 90.0);
 
         // Calculate GC content
-        let gc_count = sequences.iter()
+        let gc_count = sequences
+            .iter()
             .flat_map(|seq| seq.iter())
             .filter(|&&base| base == b'G' || base == b'g' || base == b'C' || base == b'c')
             .count();
@@ -68,7 +67,7 @@ impl GenomicStats {
     fn calculate_nx(lengths: &[usize], percentage: f64) -> usize {
         let total_length: usize = lengths.iter().sum();
         let target_length = (total_length as f64 * percentage / 100.0).round() as usize;
-        
+
         let mut current_length = 0;
         for &len in lengths {
             current_length += len;
@@ -76,7 +75,7 @@ impl GenomicStats {
                 return len;
             }
         }
-        
+
         lengths.first().copied().unwrap_or(0)
     }
 
@@ -95,12 +94,11 @@ impl GenomicStats {
 }
 
 pub fn parse_fasta(filename: &str) -> Vec<Vec<u8>> {
-    let content = std::fs::read_to_string(filename)
-        .expect("Could not read file");
-    
+    let content = std::fs::read_to_string(filename).expect("Could not read file");
+
     let mut sequences = Vec::new();
     let mut current_seq = Vec::new();
-    
+
     for line in content.lines() {
         if line.starts_with('>') {
             if !current_seq.is_empty() {
@@ -111,12 +109,12 @@ pub fn parse_fasta(filename: &str) -> Vec<Vec<u8>> {
             current_seq.extend_from_slice(line.as_bytes());
         }
     }
-    
+
     // Don't forget the last sequence
     if !current_seq.is_empty() {
         sequences.push(current_seq);
     }
-    
+
     // Convert to uppercase and validate DNA sequence
     for seq in &mut sequences {
         for base in seq {
@@ -130,6 +128,6 @@ pub fn parse_fasta(filename: &str) -> Vec<Vec<u8>> {
             };
         }
     }
-    
+
     sequences
 }

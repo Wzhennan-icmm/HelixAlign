@@ -72,6 +72,12 @@ differential checks fail 298/432, with 4,885 extra and 665 missing tuples in
 this corpus. Reverse tests are not attributed to the old ordinary CLI, which
 does not support that mode. These are corpus totals, not genome-wide rates.
 
+The original CLI has no -n switch. Some ambiguity-containing cases therefore
+also reflect a character-policy difference. In the pure ACGT subset (90 FASTA
+pairs), the original still fails 168/270 checks, with 2,072 extra and 378 missing
+tuples. This stratification uses the saved executions, not an additional run;
+see results/character-policy-strata.json.
+
 ## 5. Hand-checkable minimal reproduction commands
 
 ```bash

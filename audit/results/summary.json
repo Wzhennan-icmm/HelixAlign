@@ -94,5 +94,27 @@
         }
       }
     }
+  },
+  "baseline_character_policy_strata": {
+    "ACGT_only": {
+      "case_count": 90,
+      "summary": {
+        "checks": 270,
+        "passed": 102,
+        "failed": 168,
+        "false_positives": 2072,
+        "false_negatives": 378
+      }
+    },
+    "contains_ambiguity": {
+      "case_count": 54,
+      "summary": {
+        "checks": 162,
+        "passed": 32,
+        "failed": 130,
+        "false_positives": 2813,
+        "false_negatives": 287
+      }
+    }
   }
 }

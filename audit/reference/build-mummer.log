@@ -1,0 +1,11 @@
+  CXX      src/essaMEM/fasta.o
+  CXX      src/essaMEM/mummer.o
+  CXX      src/essaMEM/sssort_compact.lo
+  CXX      src/essaMEM/sparseSA.lo
+  CXX      src/tigr/mgaps.lo
+  CXX      src/tigr/postnuc.lo
+  CXX      src/tigr/sw_align.lo
+  CXX      src/tigr/tigrinc.lo
+  CXX      src/umd/nucmer.lo
+  CXXLD    libumdmummer.la
+  CXXLD    mummer

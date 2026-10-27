@@ -1,113 +1,134 @@
-use crate::Match;
+//! Output for contig-aware, strand-aware exact matches.
+use crate::{FastaRecord, RecordMatch};
+use std::io::{self, Write};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum OutputFormat {
     Default,
-    Delta,
+    Matches,
     Paf,
+    Delta,
     Sam,
 }
 
 impl OutputFormat {
-    pub fn from_str(s: &str) -> Option<Self> {
-        match s.to_lowercase().as_str() {
-            "delta" => Some(OutputFormat::Delta),
-            "paf" => Some(OutputFormat::Paf),
-            "sam" => Some(OutputFormat::Sam),
+    pub fn from_str(value: &str) -> Option<Self> {
+        match value.to_ascii_lowercase().as_str() {
+            "default" => Some(Self::Default),
+            "matches" | "tsv" => Some(Self::Matches),
+            "paf" => Some(Self::Paf),
+            "delta" => Some(Self::Delta),
+            "sam" => Some(Self::Sam),
             _ => None,
+        }
+    }
+    pub fn validate_exact_output(self) -> Result<(), String> {
+        match self {
+            Self::Delta | Self::Sam => Err("SAM/delta output is not implemented correctly for this exact-match engine; use matches or paf".into()),
+            _ => Ok(()),
         }
     }
 }
 
-pub fn print_matches_in_format(matches: &[Match], query_file: &str, format: &OutputFormat, reference_seq: &[u8], query_seq: &[u8]) {
-    match format {
-        OutputFormat::Default => print_matches_default(matches, query_file),
-        OutputFormat::Delta => print_matches_delta(matches, query_file, reference_seq, query_seq),
-        OutputFormat::Paf => print_matches_paf(matches, query_file, reference_seq, query_seq),
-        OutputFormat::Sam => print_matches_sam(matches, query_file, reference_seq, query_seq),
+/// Write record-local coordinates and preserve strand identity. PAF MAPQ 255
+/// means unavailable; no confidence estimate is inferred from an exact seed.
+pub fn write_record_matches<W: Write>(
+    out: &mut W,
+    matches: &[RecordMatch],
+    references: &[FastaRecord],
+    query: &FastaRecord,
+    format: OutputFormat,
+) -> io::Result<()> {
+    format
+        .validate_exact_output()
+        .map_err(|e| io::Error::new(io::ErrorKind::InvalidInput, e))?;
+    if format == OutputFormat::Default {
+        writeln!(out, "> {}", query.id)?;
     }
+    for m in matches {
+        let reference = references.get(m.reference_index).ok_or_else(|| {
+            io::Error::new(io::ErrorKind::InvalidInput, "Invalid reference index")
+        })?;
+        if m.len == 0
+            || m.ref_pos
+                .checked_add(m.len)
+                .is_none_or(|end| end > reference.sequence.len())
+            || m.query_pos
+                .checked_add(m.len)
+                .is_none_or(|end| end > query.sequence.len())
+        {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "Match outside record boundaries",
+            ));
+        }
+        match format {
+            OutputFormat::Default => writeln!(
+                out,
+                "  Ref: {}:{}  Query: {}  Len: {}  Strand: {}",
+                reference.id,
+                m.ref_pos + 1,
+                m.query_pos + 1,
+                m.len,
+                m.strand.symbol()
+            )?,
+            OutputFormat::Matches => writeln!(
+                out,
+                "{}\t{}\t{}\t{}\t{}\t{}",
+                reference.id,
+                query.id,
+                m.strand.symbol(),
+                m.ref_pos,
+                m.query_pos,
+                m.len
+            )?,
+            OutputFormat::Paf => writeln!(
+                out,
+                "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t255",
+                query.id,
+                query.sequence.len(),
+                m.query_pos,
+                m.query_pos + m.len,
+                m.strand.symbol(),
+                reference.id,
+                reference.sequence.len(),
+                m.ref_pos,
+                m.ref_pos + m.len,
+                m.len,
+                m.len
+            )?,
+            OutputFormat::Delta | OutputFormat::Sam => unreachable!("validated above"),
+        }
+    }
+    Ok(())
 }
 
-fn print_matches_default(matches: &[Match], query_file: &str) {
-    println!("> Query: {}", query_file);
-    for m in matches {
-        println!("  Ref: {}  Query: {}  Len: {}", m.ref_pos + 1, m.query_pos + 1, m.len);
-    }
-}
-
-fn print_matches_delta(matches: &[Match], query_file: &str, reference_seq: &[u8], _query_seq: &[u8]) {
-    // Print header for delta format
-    println!("NUCMER");
-    println!("NUCMER");
-    
-    // Print reference and query file names
-    println!("> Reference Query");
-    
-    for m in matches {
-        // Delta format: ref_start ref_end query_start query_end ref_len query_len match_len
-        let ref_start = m.ref_pos + 1;  // 1-based indexing
-        let ref_end = m.ref_pos + m.len;
-        let query_start = m.query_pos + 1;  // 1-based indexing
-        let query_end = m.query_pos + m.len;
-        
-        let ref_len = reference_seq.len();
-        let query_len = _query_seq.len();
-        
-        println!("{} {} {} {} {} {} {}", 
-                 ref_start, ref_end, query_start, query_end, ref_len, query_len, m.len);
-    }
-}
-
-fn print_matches_paf(matches: &[Match], query_file: &str, reference_seq: &[u8], query_seq: &[u8]) {
-    for m in matches {
-        // PAF format: query_name, query_length, query_start, query_end, 
-        // strand, ref_name, ref_length, ref_start, ref_end, 
-        // matching_bases, alignment_length, mapping_quality
-        
-        let query_name = query_file;
-        let query_length = query_seq.len();
-        let query_start = m.query_pos;
-        let query_end = m.query_pos + m.len;
-        
-        let strand = "+"; // For simplicity, assuming forward strand
-        
-        let ref_name = "reference"; // Using a generic name
-        let ref_length = reference_seq.len();
-        let ref_start = m.ref_pos;
-        let ref_end = m.ref_pos + m.len;
-        
-        let matching_bases = m.len; // Assuming all bases match for simplicity
-        let alignment_length = m.len;
-        let mapping_quality = 60; // Default mapping quality
-        
-        println!("{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}", 
-                 query_name, query_length, query_start, query_end,
-                 strand, ref_name, ref_length, ref_start, ref_end,
-                 matching_bases, alignment_length, mapping_quality);
-    }
-}
-
-fn print_matches_sam(matches: &[Match], query_file: &str, reference_seq: &[u8], query_seq: &[u8]) {
-    // Print SAM header if this is the first output
-    println!("@HD\tVN:1.6");
-    println!("@SQ\tSN:reference\tLN:{}", reference_seq.len());
-    
-    for m in matches {
-        // SAM format: QNAME, FLAG, RNAME, POS, MAPQ, CIGAR, RNEXT, PNEXT, TLEN, SEQ, QUAL
-        
-        let qname = query_file; // Query template NAME
-        let flag = 0; // bitwise FLAG (0 for forward strand, unmated)
-        let rname = "reference"; // Reference sequence NAME
-        let pos = m.ref_pos + 1; // 1-based leftmost mapping POSition
-        let mapq = 60; // MAPping Quality
-        let cigar = format!("{}M", m.len); // CIGAR string
-        let rnext = "*"; // Ref. name of the mate/next read
-        let pnext = 0; // Position of the mate/next read
-        let tlen = 0; // observed Template LENgth
-        let seq = String::from_utf8_lossy(&query_seq[m.query_pos..m.query_pos + m.len]); // segment SEQuence
-        let qual = "*"; // ASCII of Phred-scaled base QUALity+33
-        
-        println!("{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}", 
-                 qname, flag, rname, pos, mapq, cigar, rnext, pnext, tlen, seq, qual);
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::Strand;
+    #[test]
+    fn paf_reverse_has_local_coordinates_strand_and_unknown_mapq() {
+        let references = vec![FastaRecord {
+            id: "r".into(),
+            sequence: b"AACCGGTA".to_vec(),
+        }];
+        let query = FastaRecord {
+            id: "q".into(),
+            sequence: b"CCTACCGGTTG".to_vec(),
+        };
+        let matches = vec![RecordMatch {
+            reference_index: 0,
+            ref_pos: 0,
+            query_pos: 2,
+            len: 8,
+            strand: Strand::Reverse,
+        }];
+        let mut out = Vec::new();
+        write_record_matches(&mut out, &matches, &references, &query, OutputFormat::Paf).unwrap();
+        assert_eq!(
+            String::from_utf8(out).unwrap(),
+            "q\t11\t2\t10\t-\tr\t8\t0\t8\t8\t8\t255\n"
+        );
     }
 }

@@ -1,0 +1,120 @@
+{
+  "date": "2026-10-27",
+  "timezone": "Asia/Shanghai",
+  "upstream_commit": "483511789035539b3cc265356af6b70e3b8f8cb9",
+  "rust_tests": {
+    "original": 8,
+    "fixed_library": 28,
+    "fixed_binary_unit": 1,
+    "fixed_cli_integration": 10,
+    "fixed_total": 39
+  },
+  "exhaustive_comparisons": {
+    "algorithm": 90642,
+    "suffix_lookup": 8636
+  },
+  "reports": {
+    "original-differential": {
+      "sha256_uncompressed": "6e0ff9452bf66a83e285eed86a661fb0d111c88f153823dfa0179f88d92e097f",
+      "seed": 20261027,
+      "fixture_cases": 24,
+      "random_cases": 120,
+      "binaries": {
+        "mummer": {
+          "path": "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+          "sha256": "833162c57e3875c46b288a00ba514629150ac4456a72c9b1778364a267358a9b",
+          "libtool_executable": {
+            "path": "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/.libs/mummer",
+            "sha256": "20cca38a58296ffc6187cd791685f40759374c9b019fc5f06fb106cdee145ff7"
+          }
+        },
+        "baseline": {
+          "path": "/workspace/scratch/4f9aebc1eabf/helixalign-audit/bin/helixalign-original",
+          "sha256": "8e135c08447da08b0ab7cebe64dcf635be9ea12de828ca3118cfdb40c69f983d"
+        }
+      },
+      "summary": {
+        "official": {
+          "checks": 1296,
+          "passed": 1296,
+          "failed": 0,
+          "errors": 0,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "invalid_matches": 0
+        },
+        "baseline": {
+          "checks": 432,
+          "passed": 134,
+          "failed": 298,
+          "errors": 0,
+          "false_positives": 4885,
+          "false_negatives": 665,
+          "invalid_matches": 4885
+        }
+      }
+    },
+    "fixed-differential": {
+      "sha256_uncompressed": "3b3bb9d2a5c25e39f9ce883672c7dc797fea9e62d3f980076d741baaf457665a",
+      "seed": 20261027,
+      "fixture_cases": 24,
+      "random_cases": 120,
+      "binaries": {
+        "mummer": {
+          "path": "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+          "sha256": "833162c57e3875c46b288a00ba514629150ac4456a72c9b1778364a267358a9b",
+          "libtool_executable": {
+            "path": "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/.libs/mummer",
+            "sha256": "20cca38a58296ffc6187cd791685f40759374c9b019fc5f06fb106cdee145ff7"
+          }
+        },
+        "candidate": {
+          "path": "/workspace/scratch/4f9aebc1eabf/helixalign-audit/bin/helixalign-fixed",
+          "sha256": "85d08b884aa790e13aada55d21a5f31b041577c4aec8da3e502391ca55e482bb"
+        }
+      },
+      "summary": {
+        "official": {
+          "checks": 1296,
+          "passed": 1296,
+          "failed": 0,
+          "errors": 0,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "invalid_matches": 0
+        },
+        "candidate": {
+          "checks": 1296,
+          "passed": 1296,
+          "failed": 0,
+          "errors": 0,
+          "false_positives": 0,
+          "false_negatives": 0,
+          "invalid_matches": 0
+        }
+      }
+    }
+  },
+  "baseline_character_policy_strata": {
+    "ACGT_only": {
+      "case_count": 90,
+      "summary": {
+        "checks": 270,
+        "passed": 102,
+        "failed": 168,
+        "false_positives": 2072,
+        "false_negatives": 378
+      }
+    },
+    "contains_ambiguity": {
+      "case_count": 54,
+      "summary": {
+        "checks": 162,
+        "passed": 32,
+        "failed": 130,
+        "false_positives": 2813,
+        "false_negatives": 287
+      }
+    }
+  }
+}

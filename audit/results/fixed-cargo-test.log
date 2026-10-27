@@ -1,0 +1,65 @@
+   Compiling helixalign v0.1.0 (/workspace/scratch/4f9aebc1eabf/helixalign-audit/HelixAlign)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.83s
+     Running unittests src/lib.rs (target/debug/deps/helixalign-0ce85c2942ab1b54)
+
+running 28 tests
+test algorithms::tests::both_sides_unique_only_the_maximal_match_is_reported ... ok
+test algorithms::tests::empty_short_and_absent_inputs_return_no_matches ... ok
+test algorithms::tests::equal_barriers_do_not_extend_a_match ... ok
+test algorithms::tests::different_diagonals_are_not_removed_by_interval_containment ... ok
+test algorithms::tests::overlapping_query_occurrences_are_not_unique ... ok
+test algorithms::tests::overlapping_reference_occurrences_are_not_unique ... ok
+test algorithms::tests::reference_records_are_boundaries_and_share_uniqueness_scope ... ok
+test fasta::tests::invalid_input_is_not_silently_converted_to_n ... ok
+test fasta::tests::records_case_wrapping_whitespace_and_crlf ... ok
+test algorithms::tests::query_repeat_is_mam_but_not_mum ... ok
+test nucmer::tests::legacy_wrapper_preserves_reverse_orientation ... ok
+test algorithms::tests::uniqueness_is_checked_after_extension ... ok
+test output_format::tests::paf_reverse_has_local_coordinates_strand_and_unknown_mapq ... ok
+test record_matching::tests::reference_uniqueness_is_global_query_uniqueness_is_record_local ... ok
+test record_matching::tests::ambiguous_bases_are_barriers_and_contig_coordinates_are_local ... ok
+test nucmer::tests::legacy_wrapper_rejects_contradictory_or_inert_settings ... ok
+test record_matching::tests::no_reference_or_query_junction_matches ... ok
+test sequence::tests::test_char_to_code ... ok
+test sequence::tests::test_dna_sequence_creation ... ok
+test record_matching::tests::reverse_coordinates_and_palindrome_keep_orientation ... ok
+test suffix_array::tests::empty_index_and_unsupported_sampling_are_explicit ... ok
+test suffix_array::tests::nonexistent_patterns_do_not_produce_a_clamped_hit ... ok
+test sequence::tests::test_reverse_complement ... ok
+test suffix_array::tests::suffix_array_and_lcp_are_exact ... ok
+test suffix_array::tests::suffix_end_and_overlap_counts_are_exact_without_a_sentinel ... ok
+test suffix_array::tests::exhaustive_lookup_matches_direct_substring_counting ... ok
+test algorithms::tests::exhaustive_sequences_with_boundaries_match_independent_oracle ... ok
+test algorithms::tests::exhaustive_binary_sequences_match_independent_oracle ... ok
+
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+
+     Running unittests src/main.rs (target/debug/deps/helixalign-ff7250f25c2af3f0)
+
+running 1 test
+test tests::rejects_invalid_parameters_and_unimplemented_formats ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli_correctness.rs (target/debug/deps/cli_correctness-adc1f155bd8b65c1)
+
+running 10 tests
+test end_of_options_allows_filenames_starting_with_a_dash ... ok
+test mem_output_keeps_maximal_matches_on_different_diagonals ... ok
+test nucmer_alias_fails_instead_of_claiming_a_gapped_alignment ... ok
+test multiple_files_keep_record_local_coordinates_and_strand_in_tsv_and_paf ... ok
+test forward_is_default_and_reverse_and_both_flags_select_the_expected_hits ... ok
+test thread_counts_preserve_order_and_stats_only_use_stderr ... ok
+test mode_flags_distinguish_mum_from_reference_only_uniqueness ... ok
+test neither_reference_nor_query_records_can_create_junction_hits ... ok
+test invalid_modes_lengths_threads_and_unimplemented_formats_have_nonzero_exit ... ok
+test malformed_empty_duplicate_and_missing_files_fail_without_partial_matches ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests helixalign
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

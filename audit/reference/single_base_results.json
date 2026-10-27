@@ -1,0 +1,87 @@
+{
+  "A,A": {
+    "mum": {
+      "stdout": "> q\n",
+      "stderr": "",
+      "rc": 0
+    },
+    "mumreference": {
+      "stdout": "> q\n",
+      "stderr": "",
+      "rc": 0
+    },
+    "maxmatch": {
+      "stdout": "> q\n",
+      "stderr": "",
+      "rc": 0
+    }
+  },
+  "AC,AG": {
+    "mum": {
+      "stdout": "> q\n",
+      "stderr": "",
+      "rc": 0
+    },
+    "mumreference": {
+      "stdout": "> q\n",
+      "stderr": "",
+      "rc": 0
+    },
+    "maxmatch": {
+      "stdout": "> q\n",
+      "stderr": "",
+      "rc": 0
+    }
+  },
+  "ACGT,ACGT": {
+    "mum": {
+      "stdout": "> q\n  r         1         1         4\n",
+      "stderr": "",
+      "rc": 0
+    },
+    "mumreference": {
+      "stdout": "> q\n  r         1         1         4\n",
+      "stderr": "",
+      "rc": 0
+    },
+    "maxmatch": {
+      "stdout": "> q\n",
+      "stderr": "",
+      "rc": 0
+    }
+  },
+  "AT,AT": {
+    "mum": {
+      "stdout": "> q\n  r         1         1         2\n",
+      "stderr": "",
+      "rc": 0
+    },
+    "mumreference": {
+      "stdout": "> q\n  r         1         1         2\n",
+      "stderr": "",
+      "rc": 0
+    },
+    "maxmatch": {
+      "stdout": "> q\n",
+      "stderr": "",
+      "rc": 0
+    }
+  },
+  "AC,CA": {
+    "mum": {
+      "stdout": "> q\n",
+      "stderr": "",
+      "rc": 0
+    },
+    "mumreference": {
+      "stdout": "> q\n",
+      "stderr": "",
+      "rc": 0
+    },
+    "maxmatch": {
+      "stdout": "> q\n",
+      "stderr": "",
+      "rc": 0
+    }
+  }
+}

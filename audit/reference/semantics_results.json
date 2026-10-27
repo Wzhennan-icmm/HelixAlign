@@ -1,0 +1,548 @@
+{
+  "query_repeat": {
+    "mum": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mum",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/query_repeat/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/query_repeat/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n> q Reverse\n"
+    },
+    "mumreference": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mumreference",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/query_repeat/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/query_repeat/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n  r         1         1         8\n  r         1        10         8\n> q Reverse\n"
+    },
+    "maxmatch": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-maxmatch",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/query_repeat/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/query_repeat/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n  r         1         1         8\n  r         1        10         8\n> q Reverse\n"
+    }
+  },
+  "double_unique": {
+    "mum": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mum",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/double_unique/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/double_unique/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n  r         2         2         8\n> q Reverse\n"
+    },
+    "mumreference": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mumreference",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/double_unique/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/double_unique/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n  r         2         2         8\n> q Reverse\n"
+    },
+    "maxmatch": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-maxmatch",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/double_unique/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/double_unique/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n  r         2         2         8\n> q Reverse\n"
+    }
+  },
+  "reference_repeat": {
+    "mum": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mum",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reference_repeat/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reference_repeat/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n> q Reverse\n"
+    },
+    "mumreference": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mumreference",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reference_repeat/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reference_repeat/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n> q Reverse\n"
+    },
+    "maxmatch": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-maxmatch",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reference_repeat/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reference_repeat/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n  r        10         1         8\n  r         1         1         8\n> q Reverse\n"
+    }
+  },
+  "multiref_duplicates": {
+    "mum": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mum",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/multiref_duplicates/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/multiref_duplicates/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n> q Reverse\n"
+    },
+    "mumreference": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mumreference",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/multiref_duplicates/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/multiref_duplicates/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n> q Reverse\n"
+    },
+    "maxmatch": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-maxmatch",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/multiref_duplicates/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/multiref_duplicates/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n  r2         1         1         8\n  r1         1         1         8\n> q Reverse\n"
+    }
+  },
+  "multiquery_duplicates": {
+    "mum": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mum",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/multiquery_duplicates/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/multiquery_duplicates/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q1\n  r         1         1         8\n> q1 Reverse\n> q2\n  r         1         1         8\n> q2 Reverse\n"
+    },
+    "mumreference": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mumreference",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/multiquery_duplicates/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/multiquery_duplicates/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q1\n  r         1         1         8\n> q1 Reverse\n> q2\n  r         1         1         8\n> q2 Reverse\n"
+    },
+    "maxmatch": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-maxmatch",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/multiquery_duplicates/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/multiquery_duplicates/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q1\n  r         1         1         8\n> q1 Reverse\n> q2\n  r         1         1         8\n> q2 Reverse\n"
+    }
+  },
+  "reference_boundary": {
+    "mum": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mum",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reference_boundary/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reference_boundary/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n> q Reverse\n"
+    },
+    "mumreference": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mumreference",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reference_boundary/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reference_boundary/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n> q Reverse\n"
+    },
+    "maxmatch": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-maxmatch",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reference_boundary/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reference_boundary/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n> q Reverse\n"
+    }
+  },
+  "query_boundary": {
+    "mum": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mum",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/query_boundary/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/query_boundary/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q1\n> q1 Reverse\n> q2\n> q2 Reverse\n"
+    },
+    "mumreference": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mumreference",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/query_boundary/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/query_boundary/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q1\n> q1 Reverse\n> q2\n> q2 Reverse\n"
+    },
+    "maxmatch": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-maxmatch",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/query_boundary/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/query_boundary/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q1\n> q1 Reverse\n> q2\n> q2 Reverse\n"
+    }
+  },
+  "reverse": {
+    "mum": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mum",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reverse/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reverse/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n> q Reverse\n  r         1         2         8\n"
+    },
+    "mumreference": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mumreference",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reverse/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reverse/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n> q Reverse\n  r         1         2         8\n"
+    },
+    "maxmatch": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-maxmatch",
+        "-n",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reverse/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reverse/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n> q Reverse\n  r         1         2         8\n"
+    },
+    "extra": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mum",
+        "-l",
+        "8",
+        "-F",
+        "-b",
+        "-c",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reverse/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/reverse/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n> q Reverse\n  r         1        10         2\n"
+    }
+  },
+  "palindrome": {
+    "mum": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mum",
+        "-n",
+        "-l",
+        "4",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/palindrome/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/palindrome/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n  r         1         1         4\n> q Reverse\n  r         1         1         4\n"
+    },
+    "mumreference": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mumreference",
+        "-n",
+        "-l",
+        "4",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/palindrome/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/palindrome/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n  r         1         1         4\n> q Reverse\n  r         1         1         4\n"
+    },
+    "maxmatch": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-maxmatch",
+        "-n",
+        "-l",
+        "4",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/palindrome/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/palindrome/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n  r         1         1         4\n> q Reverse\n  r         1         1         4\n"
+    }
+  },
+  "ambiguity": {
+    "mum": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mum",
+        "-n",
+        "-l",
+        "4",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/ambiguity/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/ambiguity/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n  r         1         1         4\n  r         9         9         4\n> q Reverse\n  r         1         9         4\n  r         9         1         4\n"
+    },
+    "mumreference": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mumreference",
+        "-n",
+        "-l",
+        "4",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/ambiguity/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/ambiguity/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n  r         1         1         4\n  r         9         9         4\n> q Reverse\n  r         9         1         4\n  r         1         9         4\n"
+    },
+    "maxmatch": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-maxmatch",
+        "-n",
+        "-l",
+        "4",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/ambiguity/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/ambiguity/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n  r         1         1         4\n  r         9         9         4\n> q Reverse\n  r         9         1         4\n  r         1         9         4\n"
+    },
+    "extra": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mum",
+        "-l",
+        "4",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/ambiguity/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/ambiguity/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n  r         1         1        12\n> q Reverse\n  r         1         9         4\n  r         5         5         4\n  r         9         1         4\n"
+    }
+  },
+  "overlap_repeat": {
+    "mum": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mum",
+        "-n",
+        "-l",
+        "3",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/overlap_repeat/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/overlap_repeat/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n> q Reverse\n"
+    },
+    "mumreference": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-mumreference",
+        "-n",
+        "-l",
+        "3",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/overlap_repeat/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/overlap_repeat/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n  r         1         1         3\n  r         1         2         3\n> q Reverse\n"
+    },
+    "maxmatch": {
+      "command": [
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/mummer-4.0.1/mummer",
+        "-maxmatch",
+        "-n",
+        "-l",
+        "3",
+        "-F",
+        "-b",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/overlap_repeat/ref.fa",
+        "/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/semantics_cases/overlap_repeat/qry.fa"
+      ],
+      "returncode": 0,
+      "stdout": "> q\n  r         1         1         3\n  r         1         2         3\n> q Reverse\n"
+    }
+  }
+}

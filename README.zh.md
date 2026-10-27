@@ -1,198 +1,84 @@
-# HelixAlign
+# HelixAlign 使用说明（正确性修复分支）
 
-[English](README.en.md) | 中文
+本分支实现 DNA 的 MUM、MAM、MEM **最大精确匹配种子**。它可以作为小规模数据的
+额外独立 CPU 正确性对照。它不是 GPU 软件，也没有实现完整 NUCmer 的聚类和
+有缺口延伸。原版问题、实际运行结果和最小复现见
+[独立审核报告](audit/CORRECTNESS_AUDIT_20261027.zh.md)。
 
-## 项目概述
+## 编译与基本用法
 
-HelixAlign 是一个用 Rust 实现的高效序列比对工具，实现了与 nucmer 相似的功能，支持多种匹配算法和输出格式。该项目旨在提供一个高性能、内存友好的替代方案，用于基因组序列比对分析。
+需要支持 Rust edition 2024 的工具链。manifest 的最低版本为 1.85，
+本次实际使用 1.99.1，未额外验证每个更早版本。
 
-## 主要功能
+~~~bash
+cargo test --locked
+cargo build --release --locked
 
-### 1. 序列比对算法
+# MUM：参考全部记录合计唯一，并在当前 query 记录内唯一。
+target/release/helixalign -mum -l 20 -b --output-format matches reference.fa query.fa
 
-- **MUM (Maximal Unique Matches)**: 计算在两个序列中都唯一的最大匹配
-- **MAM (Maximal Unique Reference Matches)**: 计算在参考序列中唯一的最大匹配（默认算法）
-- **MEM (Maximal Exact Matches)**: 计算所有最大匹配，不考虑唯一性
+# MAM：仅要求参考唯一；默认只处理 query 正向。
+target/release/helixalign -mumreference -l 20 --output-format matches reference.fa query.fa
 
-### 2. 核心组件
+# MEM：保留所有左右均不可延伸的精确匹配，包括不同对角线的合法短匹配。
+target/release/helixalign -maxmatch -l 20 -r --format paf reference.fa query.fa
+~~~
 
-#### 后缀数组实现
-- 实现了稀疏后缀数组，支持高效的模式匹配
-- 提供 `find_matches` 方法返回匹配位置值
-- 支持 LCP (最长公共前缀) 数组计算
+-l/--minmatch 为正整数；-b/--both 为双向，-r/--reverse 为反向，
+--forward 为正向。-t/--threads 设定 query 记录处理的线程数。
+-f、--format、--output-format 为同一输出格式选项。
+-stats/--stats 将统计输出到 stderr，不污染匹配文件。
+-n、-F 被接受，ACGT-only 和参考 ID 输出始终启用。
 
-#### 序列处理
-- 实现 `DnaSequence` 结构体处理 DNA 序列
-- 提供反向互补序列计算功能
+## 记录、字符与坐标
 
-#### 基因组统计
-- 计算 N50/N90 等基因组统计指标
-- 支持多序列统计信息计算
-- 实现了 `Display` trait 便于输出格式化
+参考唯一性跨全部 reference records 计数；query 唯一性仅在当前记录内判断，
+重叠出现也计数。两个方向分别处理；回文匹配可在两条链上各输出一条。
 
-### 3. Nucmer 参数支持
+只允许 A/C/G/T 参与匹配；N 和其他接受的 IUPAC 字符为不可跨越的屏障，
+不作为通配符。FASTA 记录不直接连接，坐标不会跨 contig。
+ID 使用 header 的第一个 token。空记录、缺失 header、非法字符、重复 ID 会报错；
+多个 query 文件之间也要求 ID 唯一。
 
-项目已实现所有 nucmer 参数，确保功能对等：
+推荐输出 matches，其六列为：
 
-#### 基本匹配参数
-- `-mum`: 计算在两个序列中都唯一的最大匹配
-- `-mumreference`/`-mumcand`: 计算在参考序列中唯一的最大匹配（默认）
-- `-maxmatch`: 计算所有最大匹配，不考虑唯一性
-- `-l`/`--minmatch`: 设置单个精确匹配的最小长度（默认: 20）
+~~~text
+ref_id  query_id  strand  ref_start  query_start  length
+~~~
 
-#### 聚类和扩展参数
-- `-b`/`--breaklen`: 设置对齐扩展尝试扩展低分区域的最大距离（默认: 200）
-- `-c`/`--mincluster`: 设置匹配簇的最小长度（默认: 65）
-- `-D`/`--diagdiff`: 设置簇中相邻锚点的最大对角线差异（默认: 5）
-- `-d`/`--diagfactor`: 设置簇中相邻锚点的最大对角线差异作为间隙长度的微分分数（默认: 0.12）
-- `-g`/`--maxgap`: 设置簇中相邻匹配之间的最大间隙（默认: 90）
-- `-L`/`--minalign`: 设置对齐的最小长度（默认: 0）
+实际使用 TAB 分隔。两个起点均为**原始正向记录上的零起始左端坐标**，
+反向命中也保持这个坐标规则，并用 strand=- 标注。
+例如 reference=AACCGGTA、query=CCTACCGGTTG、阈值8，
+反向输出为 r q - 0 2 8。
 
-#### 处理选项
-- `-noextend`: 不执行簇扩展步骤
-- `-nooptimize`: 不进行对齐分数优化
-- `-nosimplify`: 不通过移除阴影簇来简化对齐
-- `-f`/`--forward`: 仅使用查询序列的正向链
-- `-r`/`--reverse`: 仅使用查询序列的反向互补链
+PAF 使用真实 ID、每条记录的长度、零起始半开区间和正确方向；
+MAPQ=255 表示未知。PAF 行表示精确种子，不代表完整 read alignment。
+默认人类可读格式使用一起始左端位置，并明确打印方向。
 
-#### 输出和文件选项
-- `-p`/`--prefix`: 将输出写入 PREFIX.delta（默认: out）
-- `--delta`: 将 delta 文件输出到指定路径
-- `--sam-short`: 输出 SAM 文件，短格式
-- `--sam-long`: 输出 SAM 文件，长格式
-- `--save`: 将后缀数组保存到文件
-- `--load`: 从文件加载后缀数组
+## 明确不支持及兼容性变化
 
-#### 高级选项
-- `-banded`: 强制基于 diagdiff 参数对动态规划矩阵进行绝对带状限制
-- `-large`: 强制使用大偏移量
-- `-G`/`--genome`: 基因组到基因组映射（长查询序列）
-- `-M`/`--max-chunk`: 设置最大块大小
-- `-t`/`--threads`: 设置使用的线程数
-- `-batch`: 按参考序列的批次进行处理
-- `-format`: 指定输出格式（default, delta, paf, sam）
-- `-stats`: 显示参考和查询序列统计信息（N50, N90 等）
+- 不输出原先错误的 SAM/delta；这些格式请求返回非零状态。
+- 名为 nucmer/nucmer-rs 的 CLI 入口被拒绝，避免将种子当作完整比对。
+- 不支持蛋白质 CLI、稀疏后缀采样或 NUCmer 聚类/延伸参数。
+- SparseSuffixArray 只接受 k=1，名称保留不代表已经实现稀疏采样。
+- print_matches_in_format 已替换为带记录上下文的 write_record_matches。
+- NucmerAligner::align 返回 Vec<RecordMatch>，保留方向；
+  align_parallel 返回 Result。历史聚类字段仅保留默认构造兼容性，
+  改成其他值会明确报错；它们不执行相应算法。
+- 正向使用 --forward，旧 -f 的输出格式意义保留。
+- 错误输入或参数返回状态2；不会把未知格式静默改成默认格式。
 
-### 4. 输出格式
-- **Default**: 默认格式
-- **Delta**: nucmer 兼容的 delta 格式
-- **PAF**: Pairwise mApping Format
-- **SAM**: Sequence Alignment/Map 格式
+## 已执行验证与未验证范围
 
-### 5. 多线程支持
-- 使用 Rayon 实现并行处理
-- 支持自定义线程数量
-- 实现进度条显示
+原版8项测试通过，但432次正向差异比较失败298次。
+修复版39项 Rust 测试全部通过；24对定向小样例和120对固定种子随机样例，
+分别以3种算法、正向/反向/双向比较，共1296次，与独立穷举预期及官方
+MUMmer4.0.1均一致，FP/FN均为0。
 
-## 安装
+完整方法和证据见 [audit/REPRODUCE.md](audit/REPRODUCE.md)。
+官方对照阈值至少2且不使用-c；该版本的长度1和反向-c边界问题另有记录，
+长度1使用独立Rust穷举检查。不能把有限测试通过解释成所有参数完全等价。
 
-### 从源码编译
-
-```bash
-git clone https://github.com/yourusername/helixalign.git
-cd helixalign
-cargo build --release
-```
-
-编译后的可执行文件将位于 `target/release/helixalign`。
-
-## 使用方法
-
-### 基本用法
-
-```bash
-helixalign reference.fa query.fa
-```
-
-### 使用特定算法和参数
-
-```bash
-helixalign -maxmatch -l 20 -t 4 -format sam reference.fa query.fa
-```
-
-### 显示统计信息
-
-```bash
-helixalign -stats reference.fa query.fa
-```
-
-### 使用所有参数的完整示例
-
-```bash
-helixalign -maxmatch -b 200 -c 65 -D 5 -d 0.12 -noextend -f -g 90 -l 20 -L 0 -nooptimize -r -nosimplify -p results --delta results.delta --sam-short results.sam --batch 10000 -banded -large -G -M 50000 -t 8 -format paf -stats reference.fa query.fa
-```
-
-## 技术亮点
-
-### 1. 高效算法实现
-- 使用稀疏后缀数组实现高效的模式匹配
-- 支持多种匹配算法（MUM, MAM, MEM）
-- 实现了最大匹配的查找和扩展
-
-### 2. 内存优化
-- 稀疏后缀数组减少内存占用
-- 批处理机制支持大文件处理
-- 可选的大偏移量支持
-
-### 3. 用户友好
-- 详细的命令行帮助信息
-- 进度条显示处理进度
-- 多种输出格式选择
-
-## 项目结构
-
-```
-helixalign/
-├── src/
-│   ├── main.rs              # 主程序入口和命令行解析
-│   ├── lib.rs               # 库文件，导出所有模块
-│   ├── sequence.rs          # DNA 序列处理
-│   ├── suffix_array.rs      # 后缀数组实现
-│   ├── algorithms.rs        # 匹配算法实现
-│   ├── nucmer.rs            # Nucmer 对齐实现
-│   ├── genomic_stats.rs     # 基因组统计计算
-│   └── output_format.rs     # 输出格式处理
-├── Cargo.toml               # 项目配置和依赖
-├── README.md                # 项目说明文档
-└── README.zh.md             # 中文说明文档
-```
-
-## 依赖项
-
-- `rayon`: 并行计算支持
-- `indicatif`: 进度条显示
-- `clap`: 命令行参数解析（计划中）
-
-## 性能
-
-HelixAlign 在保持与 nucmer 功能对等的同时，提供了以下性能优势：
-
-- 更快的后缀数组构建
-- 更低的内存占用
-- 更好的多线程扩展性
-
-## 贡献
-
-欢迎提交问题报告和功能请求！如果您想贡献代码，请：
-
-1. Fork 本仓库
-2. 创建您的功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交您的更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 打开一个 Pull Request
-
-## 许可证
-
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
-
-## 致谢
-
-- 本项目受到 MUMmer4 的启发，旨在提供类似的功能
-- 感谢 Rust 社区提供的优秀工具和库
-
-## 联系方式
-
-如有问题或建议，请通过以下方式联系：
-
-- 提交 Issue: [GitHub Issues](https://github.com/yourusername/helixalign/issues)
-- 邮箱: your.email@example.com
+仍使用完整后缀比较排序和朴素LCP构建，长重复可能产生很大的计算和内存代价。
+尚未完成全基因组、资源耗尽或正式性能测试；也没有测量GPU加速比。
+GPU性能主基线应使用固定版本、同样任务和输出规则的成熟官方CPU实现。

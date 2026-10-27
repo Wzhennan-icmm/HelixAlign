@@ -1,198 +1,120 @@
-# HelixAlign
+# HelixAlign: exact-match usage
 
-English | [中文](README.zh.md)
+This branch implements DNA maximal exact seeds, with explicit record and strand
+identity. It does not implement full NUCmer clustering, gapped extension, protein
+matching or GPU kernels. The independent audit is in
+[audit/CORRECTNESS_AUDIT_20261027.zh.md](audit/CORRECTNESS_AUDIT_20261027.zh.md).
 
-## Overview
+## Definitions
 
-HelixAlign is an efficient sequence alignment tool implemented in Rust, providing functionality similar to nucmer with support for multiple matching algorithms and output formats. This project aims to offer a high-performance, memory-friendly alternative for genomic sequence alignment analysis.
+| Mode | Switch | Uniqueness after maximal extension |
+|---|---|---|
+| MUM | -mum | Once across all reference records and once within the current query record |
+| MAM | -mumreference, -mumcand | Once across all reference records |
+| MEM | -maxmatch | No uniqueness filter |
 
-## Main Features
+Every match is exact and cannot extend either left or right at its own pair of
+positions. Overlapping occurrences count toward uniqueness. A shorter MEM on a
+different diagonal is not removed simply because its intervals are contained
+within a longer match's intervals. Query records and orientations are handled
+separately, matching official mummer's scope.
 
-### 1. Sequence Alignment Algorithms
+## Build
 
-- **MUM (Maximal Unique Matches)**: Compute maximal matches that are unique in both sequences
-- **MAM (Maximal Unique Reference Matches)**: Compute maximal matches that are unique in the reference sequence (default algorithm)
-- **MEM (Maximal Exact Matches)**: Compute all maximal matches regardless of their uniqueness
+~~~bash
+cargo test --locked
+cargo build --release --locked
+~~~
 
-### 2. Core Components
+The binary is target/release/helixalign. Cargo.lock is committed. The manifest
+requires Rust >=1.85 (edition 2024); the audit ran on Rust 1.99.1 and did not
+separately verify every supported older compiler.
 
-#### Suffix Array Implementation
-- Implements sparse suffix arrays for efficient pattern matching
-- Provides `find_matches` method that returns match position values
-- Supports LCP (Longest Common Prefix) array calculation
+## Commands
 
-#### Sequence Processing
-- Implements `DnaSequence` struct for DNA sequence handling
-- Provides reverse complement calculation functionality
+~~~bash
+# Reference-unique maximal matches, query forward only (defaults).
+target/release/helixalign -l 20 reference.fa query.fa
 
-#### Genomic Statistics
-- Calculates genomic statistics such as N50/N90
-- Supports multi-sequence statistics calculation
-- Implements `Display` trait for easy output formatting
+# Both-side unique matches, both orientations, canonical TSV.
+target/release/helixalign -mum -l 20 -b --output-format matches reference.fa query.fa
 
-### 3. Nucmer Parameter Support
+# All MEMs, reverse only, PAF.
+target/release/helixalign -maxmatch -l 20 -r --format paf reference.fa query.fa
 
-The project implements all nucmer parameters to ensure feature parity:
+# Process query records with an explicitly sized local thread pool.
+target/release/helixalign -mumreference -l 20 -b -t 4 -f matches reference.fa q1.fa q2.fa
+~~~
 
-#### Basic Matching Parameters
-- `-mum`: Compute maximal matches that are unique in both sequences
-- `-mumreference`/`-mumcand`: Compute maximal matches that are unique in the reference sequence (default)
-- `-maxmatch`: Compute all maximal matches regardless of their uniqueness
-- `-l`/`--minmatch`: Set the minimum length of a single exact match (default: 20)
+- -l/--minmatch must be a positive integer.
+- Default strand is forward; --forward is explicit forward, -r/--reverse is
+  reverse complement, and -b/--both requests both.
+- -f/--format/--output-format accepts default, matches/tsv, or paf.
+- -stats/--stats writes sequence statistics to stderr, keeping TSV/PAF clean.
+- -n and -F are accepted compatibility flags. ACGT-only matching and reference
+  identifiers are always enabled.
+- -- ends option parsing and permits paths beginning with a hyphen.
+- Unsupported switches and invalid options return exit status 2.
 
-#### Clustering and Extension Parameters
-- `-b`/`--breaklen`: Set the distance an alignment extension will attempt to extend poor scoring regions before giving up (default: 200)
-- `-c`/`--mincluster`: Sets the minimum length of a cluster of matches (default: 65)
-- `-D`/`--diagdiff`: Set the maximum diagonal difference between two adjacent anchors in a cluster (default: 5)
-- `-d`/`--diagfactor`: Set the maximum diagonal difference between two adjacent anchors in a cluster as a differential fraction of the gap length (default: 0.12)
-- `-g`/`--maxgap`: Set the maximum gap between two adjacent matches in a cluster (default: 90)
-- `-L`/`--minalign`: Minimum length of an alignment (default: 0)
+FASTA IDs are the first header token. Empty records, missing headers, illegal
+characters and duplicate IDs are errors. Query IDs must also be unique across
+multiple query input files. IUPAC letters are retained in coordinates but
+non-ACGT letters never match. Wrapped lines, ASCII whitespace, CRLF and case
+normalization are supported. No reference or query match crosses a record.
 
-#### Processing Options
-- `-noextend`: Do not perform cluster extension step
-- `-nooptimize`: No alignment score optimization
-- `-nosimplify`: Don't simplify alignments by removing shadowed clusters
-- `-f`/`--forward`: Use only the forward strand of the Query sequences
-- `-r`/`--reverse`: Use only the reverse complement of the Query sequences
+## Output
 
-#### Output and File Options
-- `-p`/`--prefix`: Write output to PREFIX.delta (default: out)
-- `--delta`: Output delta file to specified path
-- `--sam-short`: Output SAM file, short format
-- `--sam-long`: Output SAM file, long format
-- `--save`: Save suffix array to files
-- `--load`: Load suffix array from file
+Canonical matches TSV has a comment header and six columns:
 
-#### Advanced Options
-- `-banded`: Enforce absolute banding of dynamic programming matrix based on diagdiff parameter
-- `-large`: Force the use of large offsets
-- `-G`/`--genome`: Map genome to genome (long query sequences)
-- `-M`/`--max-chunk`: Set maximum chunk size
-- `-t`/`--threads`: Set number of threads to use
-- `-batch`: Proceed by batch of chunks from the reference
-- `-format`: Specify output format (default, delta, paf, sam)
-- `-stats`: Show reference and query sequence statistics (N50, N90, etc.)
+~~~text
+#ref_id query_id strand ref_start query_start length
+r       q        -      0         2           8
+~~~
 
-### 4. Output Formats
-- **Default**: Default format
-- **Delta**: nucmer-compatible delta format
-- **PAF**: Pairwise mApping Format
-- **SAM**: Sequence Alignment/Map format
+The actual separator is TAB. All starts are zero-based positions on the
+original forward record. Even for the reverse strand, query_start is the
+leftmost original-query position; the aligned interval is
+[query_start, query_start + length). The default human format uses one-based
+left positions and an explicit strand label.
 
-### 5. Multi-threading Support
-- Parallel processing using Rayon
-- Support for custom thread count
-- Progress bar implementation
+PAF contains real record names, per-record lengths, zero-based half-open
+intervals, and strand. MAPQ is 255 (unavailable); rows are exact seeds, not
+confidence-calibrated complete read alignments.
 
-## Installation
+SAM/delta output is refused because the former writers did not represent valid
+alignment semantics. A binary invoked as nucmer or nucmer-rs is also refused.
+No clustering or gapped alignment is inferred from exact seeds.
 
-### Compile from Source
+## Rust API migration
 
-```bash
-git clone https://github.com/yourusername/helixalign.git
-cd helixalign
-cargo build --release
-```
+Prefer FastaRecord + ExactMatcher + RecordMatch + write_record_matches.
+Core functions find_mums, find_mams, find_mems and run_mummer_algorithm remain
+available for a single oriented query byte sequence; byte zero is a hard
+nonmatching barrier. Core matching is byte-based: use ExactMatcher for DNA
+normalization and record metadata.
 
-The compiled executable will be located at `target/release/helixalign`.
+SparseSuffixArray is a historical type name. It stores every suffix and now
+rejects k != 1. Empty indices are supported. The core matching functions return
+an empty vector for invalid min_len=0; the checked ExactMatcher and CLI reject it.
 
-## Usage
+NucmerAligner is retained as a single-record exact-match wrapper, with no
+NUCmer clustering or extension. Its align method now returns Vec<RecordMatch>
+so direction is retained; align_parallel returns a Result and uses a local
+thread pool. Changing legacy inert nucmer settings is rejected.
 
-### Basic Usage
+The old print_matches_in_format API was removed; callers must migrate to
+write_record_matches with record context. These changes deliberately expose
+incorrect old assumptions and are not a fully compatible API update.
 
-```bash
-helixalign reference.fa query.fa
-```
+## Validation and scalability
 
-### Using Specific Algorithm and Parameters
+See [REPRODUCE.md](audit/REPRODUCE.md) for the 39 Rust tests and the three-way
+differential runner. The finite corpus uses official MUMmer 4.0.1, min_len >=2,
+-n and no -c. Known reference edge defects are documented; one-base matching
+is covered by an independent exhaustive Rust oracle.
 
-```bash
-helixalign -maxmatch -l 20 -t 4 -format sam reference.fa query.fa
-```
-
-### Display Statistics
-
-```bash
-helixalign -stats reference.fa query.fa
-```
-
-### Complete Example with All Parameters
-
-```bash
-helixalign -maxmatch -b 200 -c 65 -D 5 -d 0.12 -noextend -f -g 90 -l 20 -L 0 -nooptimize -r -nosimplify -p results --delta results.delta --sam-short results.sam --batch 10000 -banded -large -G -M 50000 -t 8 -format paf -stats reference.fa query.fa
-```
-
-## Technical Highlights
-
-### 1. Efficient Algorithm Implementation
-- Sparse suffix arrays for efficient pattern matching
-- Support for multiple matching algorithms (MUM, MAM, MEM)
-- Implementation of maximal match finding and extension
-
-### 2. Memory Optimization
-- Sparse suffix arrays reduce memory usage
-- Batch processing mechanism for large file handling
-- Optional large offset support
-
-### 3. User-Friendly
-- Detailed command-line help information
-- Progress bar for processing status
-- Multiple output format options
-
-## Project Structure
-
-```
-helixalign/
-├── src/
-│   ├── main.rs              # Main program entry and command-line parsing
-│   ├── lib.rs               # Library file, exports all modules
-│   ├── sequence.rs          # DNA sequence processing
-│   ├── suffix_array.rs      # Suffix array implementation
-│   ├── algorithms.rs        # Matching algorithm implementation
-│   ├── nucmer.rs            # Nucmer alignment implementation
-│   ├── genomic_stats.rs     # Genomic statistics calculation
-│   └── output_format.rs     # Output format handling
-├── Cargo.toml               # Project configuration and dependencies
-├── README.md                # Project documentation
-└── README.zh.md             # Chinese documentation
-```
-
-## Dependencies
-
-- `rayon`: Parallel computing support
-- `indicatif`: Progress bar display
-- `clap`: Command-line argument parsing (planned)
-
-## Performance
-
-While maintaining feature parity with nucmer, HelixAlign provides the following performance advantages:
-
-- Faster suffix array construction
-- Lower memory usage
-- Better multi-threading scalability
-
-## Contributing
-
-Bug reports and feature requests are welcome! If you'd like to contribute code, please:
-
-1. Fork this repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- This project is inspired by MUMmer4 and aims to provide similar functionality
-- Thanks to the Rust community for excellent tools and libraries
-
-## Contact
-
-For questions or suggestions, please contact:
-
-- Submit Issues: [GitHub Issues](https://github.com/yourusername/helixalign/issues)
-- Email: your.email@example.com
+Suffix sorting still compares full suffixes, and adjacent LCP values are
+calculated naively. Repeats can make construction and matching expensive.
+This is a supplemental small-input correctness implementation. Use a mature,
+version-pinned official CPU implementation with equivalent semantics as the
+primary GPU performance denominator.

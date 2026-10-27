@@ -1,0 +1,20 @@
+{
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "g++": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "mummer_version": "4.0.1",
+  "source_release": "https://github.com/mummer4/mummer/releases/download/v4.0.1/mummer-4.0.1.tar.gz",
+  "tag": "v4.0.1",
+  "tag_object": "12507767455af0b7525d6d1bd70e4483c434f953",
+  "commit": "eb734606f2d516f42a0e0dce7a116bfb88ec1ebf",
+  "sha256": "bc20ae2701a0b2e323e4e515b7cfa18a0f0cb34a4ff5844b289b2de0154e3d3e",
+  "commands": [
+    "tar --no-same-owner -xzf mummer-4.0.1.tar.gz",
+    "./configure --prefix=/workspace/scratch/4f9aebc1eabf/helixalign-audit/reference/install",
+    "make -j4 mummer"
+  ],
+  "notes": [
+    "Only mummer target and its shared library compiled; whole package test suite not run.",
+    "Initial tar extraction produced ownership warnings but contents extracted and build succeeded. Use --no-same-owner when reproducing."
+  ]
+}

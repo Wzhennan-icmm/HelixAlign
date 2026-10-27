@@ -1,0 +1,170 @@
+[
+  {
+    "name": "query_repeat",
+    "description": "Reference-unique ACGT occurs twice in the same query; MUM must be empty.",
+    "reference": "query_repeat.ref.fa",
+    "query": "query_repeat.query.fa",
+    "min_len": 4
+  },
+  {
+    "name": "both_unique",
+    "description": "The entire eight-base sequence occurs once on each side.",
+    "reference": "both_unique.ref.fa",
+    "query": "both_unique.query.fa",
+    "min_len": 8
+  },
+  {
+    "name": "reference_repeat",
+    "description": "ACGT occurs twice in the reference; only MEM retains both hits.",
+    "reference": "reference_repeat.ref.fa",
+    "query": "reference_repeat.query.fa",
+    "min_len": 4
+  },
+  {
+    "name": "overlapping_query",
+    "description": "AA has overlapping query occurrences at 0, 1 and 2.",
+    "reference": "overlapping_query.ref.fa",
+    "query": "overlapping_query.query.fa",
+    "min_len": 2
+  },
+  {
+    "name": "homopolymer",
+    "description": "Five pairwise MEMs in AAAA vs AAAA; maximality is diagonal-specific.",
+    "reference": "homopolymer.ref.fa",
+    "query": "homopolymer.query.fa",
+    "min_len": 2
+  },
+  {
+    "name": "nested_diagonals",
+    "description": "The two length-two offset AC matches are valid MEMs inside the coordinate rectangle of the length-four match.",
+    "reference": "nested_diagonals.ref.fa",
+    "query": "nested_diagonals.query.fa",
+    "min_len": 2
+  },
+  {
+    "name": "no_match",
+    "description": "Neither forward nor reverse query has a two-base exact match.",
+    "reference": "no_match.ref.fa",
+    "query": "no_match.query.fa",
+    "min_len": 2
+  },
+  {
+    "name": "suffix_overrun",
+    "description": "A reference suffix shorter than the whole query must not be reported at query length.",
+    "reference": "suffix_overrun.ref.fa",
+    "query": "suffix_overrun.query.fa",
+    "min_len": 2
+  },
+  {
+    "name": "reference_boundary",
+    "description": "Joining r1 and r2 would invent AACC across the reference boundary.",
+    "reference": "reference_boundary.ref.fa",
+    "query": "reference_boundary.query.fa",
+    "min_len": 4
+  },
+  {
+    "name": "query_boundary",
+    "description": "Joining q1 and q2 would invent AACC across the query boundary.",
+    "reference": "query_boundary.ref.fa",
+    "query": "query_boundary.query.fa",
+    "min_len": 4
+  },
+  {
+    "name": "reference_global_unique",
+    "description": "Identical sequence in two reference records invalidates MAM and MUM uniqueness.",
+    "reference": "reference_global_unique.ref.fa",
+    "query": "reference_global_unique.query.fa",
+    "min_len": 4
+  },
+  {
+    "name": "query_record_unique",
+    "description": "Identical sequence in distinct query records is unique within each query and is a MUM for each.",
+    "reference": "query_record_unique.ref.fa",
+    "query": "query_record_unique.query.fa",
+    "min_len": 4
+  },
+  {
+    "name": "reverse_offset",
+    "description": "Reverse match starts at 1 in reverse-complement coordinates and at 2 in original query coordinates.",
+    "reference": "reverse_offset.ref.fa",
+    "query": "reverse_offset.query.fa",
+    "min_len": 8
+  },
+  {
+    "name": "palindrome",
+    "description": "Palindromic ACGT has distinct forward and reverse matches at the same coordinates.",
+    "reference": "palindrome.ref.fa",
+    "query": "palindrome.query.fa",
+    "min_len": 4
+  },
+  {
+    "name": "mixed_case",
+    "description": "FASTA DNA input is case-insensitive.",
+    "reference": "mixed_case.ref.fa",
+    "query": "mixed_case.query.fa",
+    "min_len": 8
+  },
+  {
+    "name": "ambiguity_barrier",
+    "description": "Under strict ACGT / official -n, N terminates exact matches.",
+    "reference": "ambiguity_barrier.ref.fa",
+    "query": "ambiguity_barrier.query.fa",
+    "min_len": 2
+  },
+  {
+    "name": "ambiguous_query_repeat",
+    "description": "N separates two overlapping-match groups; it cannot participate in an exact match.",
+    "reference": "ambiguous_query_repeat.ref.fa",
+    "query": "ambiguous_query_repeat.query.fa",
+    "min_len": 2
+  },
+  {
+    "name": "below_threshold",
+    "description": "All records are shorter than the requested minimum length.",
+    "reference": "below_threshold.ref.fa",
+    "query": "below_threshold.query.fa",
+    "min_len": 2
+  },
+  {
+    "name": "terminal_suffix",
+    "description": "The matching reference suffix ends exactly at the record boundary.",
+    "reference": "terminal_suffix.ref.fa",
+    "query": "terminal_suffix.query.fa",
+    "min_len": 2
+  },
+  {
+    "name": "internal_maximal",
+    "description": "A three-base match has mismatches on both flanks.",
+    "reference": "internal_maximal.ref.fa",
+    "query": "internal_maximal.query.fa",
+    "min_len": 3
+  },
+  {
+    "name": "tandem_overlap",
+    "description": "Alternating repeat copies overlap; every maximal diagonal must be retained for MEM.",
+    "reference": "tandem_overlap.ref.fa",
+    "query": "tandem_overlap.query.fa",
+    "min_len": 3
+  },
+  {
+    "name": "multiple_records_reverse",
+    "description": "Several records combine forward, reverse and absent matches.",
+    "reference": "multiple_records_reverse.ref.fa",
+    "query": "multiple_records_reverse.query.fa",
+    "min_len": 4
+  },
+  {
+    "name": "iupac_barriers",
+    "description": "Every non-ACGT IUPAC code is a barrier under -n.",
+    "reference": "iupac_barriers.ref.fa",
+    "query": "iupac_barriers.query.fa",
+    "min_len": 2
+  },
+  {
+    "name": "lexicographic_mismatch",
+    "description": "The suffix AT is lexicographically above AA, but is not an exact occurrence; lookup must return empty.",
+    "reference": "lexicographic_mismatch.ref.fa",
+    "query": "lexicographic_mismatch.query.fa",
+    "min_len": 2
+  }
+]
